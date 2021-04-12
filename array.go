@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	// var testArray [3]int
@@ -49,18 +51,18 @@ func main() {
 	// fmt.Println(c[2][1])
 
 	// 二维数组的遍历
-	d := [3][2]string{
-		{"北京", "上海"},
-		{"广州", "深圳"},
-		{"成都", "重庆"},
-	}
+	// d := [3][2]string{
+	// 	{"北京", "上海"},
+	// 	{"广州", "深圳"},
+	// 	{"成都", "重庆"},
+	// }
 
-	for _, v1 := range d {
-		for _, v2 := range v1 {
-			fmt.Printf("%s\t", v2)
-		}
-		fmt.Println()
-	}
+	// for _, v1 := range d {
+	// 	for _, v2 := range v1 {
+	// 		fmt.Printf("%s\t", v2)
+	// 	}
+	// 	fmt.Println()
+	// }
 
 	// 多维数组只有第一层可以使用...来让编译器推导数组长度。例如：
 	//支持的写法
@@ -76,4 +78,23 @@ func main() {
 	// 	{"成都", "重庆"},
 	// }
 
+	a := [3]int{10, 20, 30}
+	modifyArray(a) //在modify中修改的是a的副本x
+	fmt.Println(a) //[10 20 30]
+	b := [3][2]int{
+		{1, 1},
+		{1, 1},
+		{1, 1},
+	}
+	modifyArray2(b) //在modify中修改的是b的副本x
+	fmt.Println(b)  //[[1 1] [1 1] [1 1]]
+}
+
+// 数组是值类型，赋值和传参会复制整个数组。因此改变副本的值，不会改变本身的值。
+func modifyArray(x [3]int) {
+	x[0] = 100
+}
+
+func modifyArray2(x [3][2]int) {
+	x[2][0] = 100
 }
