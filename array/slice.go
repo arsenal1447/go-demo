@@ -100,19 +100,46 @@ func main() {
 	// }
 
 	//注意：通过var声明的零值切片可以在append()函数直接使用，无需初始化。
+	// var s []int
+	// s = append(s, 1)
+	// fmt.Println(s) //[1]
+
+	// s = append(s, 2, 3, 4)
+	// fmt.Println(s) //[1 2 3 4]
+
+	// s2 := []int{5, 6, 7}
+	// fmt.Println(s2) //[5 6 7]
+
+	// //Go语言的内建函数append()可以为切片动态添加元素。
+	// //可以一次添加一个元素，可以添加多个元素，也可以添加另一个切片中的元素（后面加…）。
+	// s = append(s, s2...)
+	// fmt.Println(s) //[1 2 3 4 5 6 7]
+
+	// 变量声明以关键字var开头，变量类型放在变量的后面，行尾无需分号。
+	//在函数内部，可以使用更简略的 := 方式声明并初始化变量。
 	var s []int
-	s = append(s, 1)
-	fmt.Println(s) //[1]
+	s = append(s, 1, 2, 3)
+	fmt.Println(s)
 
-	s = append(s, 2, 3, 4)
-	fmt.Println(s) //[1 2 3 4]
+	// 每个切片会指向一个底层数组，这个数组的容量够用就添加新增元素。
+	// 当底层数组不能容纳新增的元素时，切片就会自动按照一定的策略进行“扩容”，此时该切片指向的底层数组就会更换。
+	// “扩容”操作往往发生在append()函数调用时，所以我们通常都需要用原变量接收append函数的返回值。
+	//append()函数将元素追加到切片的最后并返回该切片。
+	// 切片numSlice的容量按照1，2，4，8，16这样的规则自动进行扩容，每次扩容后都是扩容前的2倍。
+	// var numSlice []int
+	// for i := 0; i < 10; i++ {
+	// 	numSlice = append(numSlice, i)
+	// 	fmt.Printf("%v  len:%d  cap:%d  ptr:%p\n", numSlice, len(numSlice), cap(numSlice), numSlice)
+	// }
 
-	s2 := []int{5, 6, 7}
-	fmt.Println(s2) //[5 6 7]
-
-	//Go语言的内建函数append()可以为切片动态添加元素。
-	//可以一次添加一个元素，可以添加多个元素，也可以添加另一个切片中的元素（后面加…）。
-	s = append(s, s2...)
-	fmt.Println(s) //[1 2 3 4 5 6 7]
+	var citySlice []string
+	// 追加一个元素
+	citySlice = append(citySlice, "北京")
+	// 追加多个元素
+	citySlice = append(citySlice, "上海", "广州", "上海")
+	// 追加切片
+	a := []string{"成都", "重庆"}
+	citySlice = append(citySlice, a...)
+	fmt.Println(citySlice) //[北京 上海 广州 上海 成都 重庆]
 
 }
