@@ -117,9 +117,9 @@ func main() {
 
 	// 变量声明以关键字var开头，变量类型放在变量的后面，行尾无需分号。
 	//在函数内部，可以使用更简略的 := 方式声明并初始化变量。
-	var s []int
-	s = append(s, 1, 2, 3)
-	fmt.Println(s)
+	// var s []int
+	// s = append(s, 1, 2, 3)
+	// fmt.Println(s)
 
 	// 每个切片会指向一个底层数组，这个数组的容量够用就添加新增元素。
 	// 当底层数组不能容纳新增的元素时，切片就会自动按照一定的策略进行“扩容”，此时该切片指向的底层数组就会更换。
@@ -132,14 +132,53 @@ func main() {
 	// 	fmt.Printf("%v  len:%d  cap:%d  ptr:%p\n", numSlice, len(numSlice), cap(numSlice), numSlice)
 	// }
 
-	var citySlice []string
-	// 追加一个元素
-	citySlice = append(citySlice, "北京")
-	// 追加多个元素
-	citySlice = append(citySlice, "上海", "广州", "上海")
-	// 追加切片
-	a := []string{"成都", "重庆"}
-	citySlice = append(citySlice, a...)
-	fmt.Println(citySlice) //[北京 上海 广州 上海 成都 重庆]
+	// var citySlice []string
+	// // 追加一个元素
+	// citySlice = append(citySlice, "北京")
+	// // 追加多个元素
+	// citySlice = append(citySlice, "上海", "广州", "上海")
+	// // 追加切片
+	// a := []string{"成都", "重庆"}
+	// citySlice = append(citySlice, a...)
+	// fmt.Println(citySlice) //[北京 上海 广州 上海 成都 重庆]
 
+	// copy copy  copy  copy  copy  copy  copy
+	// 使用copy()函数复制切片
+	// a := []int{1, 2, 3, 4, 5}
+	// b := a
+	// fmt.Println(a) //[1 2 3 4 5]
+	// fmt.Println(b) //[1 2 3 4 5]
+	// //由于切片是引用类型，所以a和b其实都指向了同一块内存地址。修改b的同时a的值也会发生变化。
+	// b[0] = 1000
+	// fmt.Println(a) //[1000 2 3 4 5]
+	// fmt.Println(b) //[1000 2 3 4 5]
+
+	// Go语言内建的copy()函数可以迅速地将一个切片的数据复制到另外一个切片空间中，copy()函数的使用格式如下：
+	// copy(destSlice, srcSlice []T)
+	// 	srcSlice: 数据来源切片
+	// destSlice: 目标切片
+
+	// a := []int{1, 2, 3, 4, 5}
+	// c := make([]int, 5, 5)
+	// fmt.Println(c) //[0 0 0 0 0]
+	// copy(c, a)     //使用copy()函数将切片a中的元素复制到切片c
+	// fmt.Println(a) //[1 2 3 4 5]
+	// fmt.Println(c) //[1 2 3 4 5]
+
+	// c[0] = 10000
+	// fmt.Println(a) //[1 2 3 4 5]
+	// fmt.Println(c) //[10000 2 3 4 5]
+
+	// 从切片中删除元素
+	// a := []int{30, 31, 32, 33, 34, 35, 36, 37}
+	// // 要删除索引为2的元素
+	// a = append(a[:2], a[3:]...)
+	// //要从切片a中删除索引为index的元素，操作方法是a = append(a[:index], a[index+1:]...)
+	// fmt.Println(a)
+
+	var b = make([]string, 5, 10)
+	for i := 0; i < 10; i++ {
+		b = append(b, fmt.Sprintf("%v", i))
+	}
+	fmt.Println(b) //[     0 1 2 3 4 5 6 7 8 9]
 }
