@@ -57,6 +57,13 @@ import (
 //         婚否
 //   -name string
 //         姓名 (default "张三")
+
+// 终端执行命令：./flag -name 沙河娜扎 --age 28 -married=false -d=1h30m
+//结果如下显示
+// 沙河娜扎 28 false 1h30m0s
+// []
+// 0
+// 4
 func main() {
 	var name string
 	var age int
