@@ -42,12 +42,19 @@ func main() {
 	// insertRowDemo()
 	// queryRowDemo()
 	// queryMutiRowDemo()
-	updateRowDemo()
-	fmt.Println("******************************\n")
-	queryMutiRowDemo()
-	fmt.Println("******************************\n")
-	deleteRowDemo()
-	queryMutiRowDemo()
+	// updateRowDemo()
+	// fmt.Println("******************************\n")
+	// queryMutiRowDemo()
+	// fmt.Println("******************************\n")
+	// deleteRowDemo()
+	// queryMutiRowDemo()
+	// prepareInsertDemo()
+
+	// sqlInjectDemo("xxx' or 1=1#")
+	// sqlInjectDemo("xxx' union select * from user #")
+	// sqlInjectDemo("xxx' and (select count(*) from user) <10 #")
+
+	transactionDemo()
 
 }
 
@@ -63,6 +70,7 @@ func queryRowDemo() {
 	fmt.Printf("id:%d name :%s age : %d\n", u.id, u.name, u.age)
 }
 
+// 查询多条数据示例
 func queryMutiRowDemo() {
 	sqlStr := "select * from user where id >?"
 	rows, err := db.Query(sqlStr, 0)
@@ -134,4 +142,121 @@ func deleteRowDemo() {
 	}
 
 	fmt.Printf("delete success ,affected rows:%d\n", n)
+}
+
+// 预处理查询示例 查询操作的预处理示例代码如下：
+func prepareQueryDemo() {
+	sqlStr := "select * from user where id>?"
+	stmt, err := db.Prepare(sqlStr)
+	if err != nil {
+		fmt.Printf("Prepare failed, err:%v\n", err)
+		return
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query(0)
+	if err != nil {
+		fmt.Printf("query failed, err:%v\n", err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var u user
+		err := rows.Scan(&u.id, &u.name, &u.age)
+		if err != nil {
+			fmt.Printf("scan failed, err:%v\n", err)
+			return
+		}
+		fmt.Printf("id :%d age :%d, name :%d \n", u.id, u.age, u.name)
+	}
+}
+
+// 预处理插入示例
+func prepareInsertDemo() {
+	sqlStr := "insert into user(name,age) values(?, ?)"
+	stmt, err := db.Prepare(sqlStr)
+	if err != nil {
+		fmt.Printf("Prepare failed, err:%v\n", err)
+		return
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec("boy", 18)
+	if err != nil {
+		fmt.Printf("insert failed, err:%v\n", err)
+		return
+	}
+	_, err = stmt.Exec("girl", 19)
+	if err != nil {
+		fmt.Printf("insert failed, err:%v\n", err)
+		return
+	}
+
+	fmt.Printf("insert success")
+}
+
+// sql注入示例
+func sqlInjectDemo(name string) {
+	sqlStr := fmt.Sprintf("selcet * from user where name ='%s'", name)
+	fmt.Printf("SQL:%s\n", sqlStr)
+	var u user
+	err := db.QueryRow(sqlStr).Scan(&u.id, &u.name, &u.age)
+	if err != nil {
+		fmt.Printf("exec failed, err:%v\n", err)
+		return
+	}
+	fmt.Printf("user:%#v\n", u)
+
+}
+
+// 事务操作示例
+func transactionDemo() {
+	tx, err := db.Begin()
+	if err != nil {
+		if tx != nil {
+			tx.Rollback()
+		}
+		fmt.Printf("begin trans failed, err:%v\n", err)
+		return
+	}
+	sqlStr1 := "update user set age =22 where id=?"
+	ret1, err := tx.Exec(sqlStr1, 2)
+	if err != nil {
+		tx.Rollback()
+		fmt.Printf("exec sql1 failed, err:%v\n", err)
+		return
+	}
+	affRow1, err := ret1.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		fmt.Printf("exec ret1.RowsAffected() failed, err:%v\n", err)
+		return
+	}
+
+	sqlStr2 := "update user set age =44 where id=?"
+	ret2, err := tx.Exec(sqlStr2, 4)
+	if err != nil {
+		tx.Rollback()
+		fmt.Printf("exec sql2 failed, err:%v\n", err)
+		return
+	}
+	affRow2, err := ret2.RowsAffected()
+	if err != nil {
+		tx.Rollback()
+		fmt.Printf("exec ret1.RowsAffected() failed, err:%v\n", err)
+		return
+	}
+
+	// fmt.Println("affRow1=="affRow1, affRow2)
+	fmt.Printf("\n exec affRow1 : %d ", affRow1)
+	fmt.Printf("\n exec affRow2 : %d \n", affRow2)
+
+	if affRow1 == 1 && affRow2 == 1 {
+		fmt.Printf("事务提交了")
+		tx.Commit()
+	} else {
+		tx.Rollback()
+		fmt.Printf("exec sql1 failed, err:%v\n", sqlStr1)
+		fmt.Printf("exec sql2 failed, err:%v\n", sqlStr2)
+		fmt.Printf("事务回滚了")
+	}
+	fmt.Printf("exec trans success")
 }
