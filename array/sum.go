@@ -12,12 +12,18 @@ func sum(array [5]int) int {
 }
 
 func main() {
-	var array = [5]int{1, 3, 5, 7, 8}
-	fmt.Println("sum(array):", sum(array))
-	// fmt.Println("find(array):", subscript(array))
+	// var array = [5]int{1, 3, 5, 7, 8}
+	// fmt.Println("sum(array):", sum(array))
+	// // fmt.Println("find(array):", subscript(array))
 
-	var testArr2 = [5]int{2, 7, 4, 1, 6}
-	find(testArr2, 8)
+	// var testArr2 = [5]int{2, 7, 4, 1, 6}
+	// find(testArr2, 8)
+
+	var array3 = [5]int{1, 3, 5, 7, 8}
+	// twoSum(array3, 9)
+	twoSum4(array3, 9)
+	// fmt.Println("twoSum(array3, 9):", twoSum(array3, 9))
+	fmt.Println("twoSum4(array3, 9):", twoSum4(array3, 9))
 }
 
 // 找出数组中和为指定值的两个元素的下标，
@@ -50,4 +56,51 @@ func find(arr [5]int, sum int) {
 			}
 		}
 	}
+}
+
+func twoSum(nums []int, target int) []int {
+	m := make(map[int]int)
+	for k, v := range nums {
+		if idx, ok := m[target-v]; ok {
+			return []int{idx, k}
+		}
+		m[v] = k
+	}
+
+	return nil
+}
+
+// func twoSum2(nums []int, target int) []int {
+// 	m := make(map[int]int)
+// 	for k, v := range nums {
+// 		if idx, ok := m[target-v]; ok {
+// 			return []int{idx, k}
+// 		}
+// 		m[v] = k
+// 	}
+// 	return nil
+// }
+
+// func twoSum3(nums [5]int, target int) []int {
+// 	l := len(nums)
+// 	for i := 0; i < l; i++ {
+// 		for j := i + 1; j < l; j++ {
+// 			if nums[i]+nums[j] == target {
+// 				return []int{i, j}
+// 			}
+// 		}
+// 	}
+// 	return []int{}
+// }
+
+func twoSum4(nums [5]int, target int) []int {
+	len := len(nums)
+	for i := 0; i < len; i++ {
+		for j := i + 1; j < len; j++ {
+			if nums[i]+nums[j] == target {
+				return []int{i, j}
+			}
+		}
+	}
+	return []int{}
 }
