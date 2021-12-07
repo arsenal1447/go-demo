@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"unsafe"
 )
-
+//https://www.liwenzhou.com/posts/Go/10_struct/#autoid-2-4-1
 //类型定义
 type NewInt int
 
