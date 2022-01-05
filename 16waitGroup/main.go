@@ -1,5 +1,6 @@
 package main
 
+// https://www.liwenzhou.com/posts/Go/14_concurrence/
 import (
 	"fmt"
 	"math/rand"
