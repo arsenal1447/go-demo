@@ -25,6 +25,7 @@ type company struct {
 	address
 }
 
+
 func main() {
 	p1 := person{
 		name: "zxx",
@@ -40,4 +41,36 @@ func main() {
 	}
 
 	fmt.Println(p1, p1.address.city, p1.workPlace.city)
+
+	d1 := &Dog{
+		Feet: 8,
+		Animal: &Animal{
+			name: "aaa",
+		},
+	}
+
+	fmt.Println(p1, p1.address.city, p1.workPlace.city)
+
+	d1.move()
+	d1.wang()
+	fmt.Println(d1, d1.name)
+
 }
+
+type Animal struct {
+	name string
+}
+
+func (a Animal) move() {
+	fmt.Printf("%s can move \n ", a.name)
+}
+
+type Dog struct {
+	Feet int8
+	*Animal
+}
+
+func (d *Dog) wang() {
+	fmt.Printf("%s can wang wang wang \n ", d.name)
+}
+
